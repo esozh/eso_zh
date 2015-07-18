@@ -21,11 +21,41 @@ local wnd_attr = {
     vmargin = 50,
 }
 
+--** local functions **--
+
+local function getHash(str) -- BKDRHash
+    local seed = 131
+    local ash = 0
+    for i = 1, #str do
+        local ch = str:sub(i, i)
+        hash = hash * seed + ch
+        hash = hash % 0x80000000
+    return hash
+end
+
 --** public functions **--
 
 ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
     Origin_InteractWindow_SetText(self, bodyText)
     ESOZH.QUEST:ShowText({19985, 20040})
+    ESOZH.QUEST:TranslateAndShowText(bodyText)
+end
+
+function ESOZH.QUEST:TranslateAndShowText(text)
+    local hash = getHash(text)
+    local ids = ESOZH.QUEST.hashTbl[tonumber(hash)]
+    if #ids > 1 then
+        for id in ids do
+            if text == ESOZH.QUEST.enTbl[id] then
+                local texts = ESOZH.QUEST.zhTbl[id]
+                ESOZH.QUEST:ShowText(texts)
+                break
+            end
+        end
+    else
+        local texts = ESOZH.QUEST.zhTbl[ids[0]]
+        ESOZH.QUEST:ShowText(texts)
+    end
 end
 
 function ESOZH.QUEST:Initialize()
