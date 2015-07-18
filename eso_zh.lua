@@ -15,6 +15,9 @@ function ESOZH.OnAddOnLoaded(event, addonName)
     ESOZH.zhWnd = LIBMW:CreateMsgWindow("eso_zh", "Chinese Translation")
 
     ESOZH.QUEST:Initialize()
+
+    -- other events
+    EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_PLAYER_ACTIVATED, ESOZH.LoadScreen)
 end
 
 function ESOZH.LoadScreen(event)
@@ -23,4 +26,3 @@ end
 
 
 EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_ADD_ON_LOADED, ESOZH.OnAddOnLoaded)
-EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_PLAYER_ACTIVATED, ESOZH.LoadScreen)
