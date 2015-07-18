@@ -1,29 +1,16 @@
 -- -*- coding: utf-8 -*-
 -- created by bssthu
 
-local _M = {}
+ESOZH.QUEST = {}
 
+local Origin_InteractWindow_SetText= ZO_InteractWindowTargetAreaBodyText.SetText
 
 --** public functions **--
 
-function _M.Initialize()
+ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
+    d(bodyText)
+    Origin_InteractWindow_SetText(self, bodyText)
 end
 
-
---** return **--
-
-_M.__index = _M
-
-function _M:new(args)
-   local new = { }
-
-   if args then
-      for key, val in pairs(args) do
-         new[key] = val
-      end
-   end
-
-   return setmetatable(new, _M)
+function ESOZH.QUEST:Initialize()
 end
-
-ESOZH.QUEST = _M:new()

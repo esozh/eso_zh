@@ -3,13 +3,16 @@
 
 ESOZH = {}
 
-ESOZH.name = "ESOZH"
+ESOZH.name = "eso_zh"
 
 
 function ESOZH.OnAddOnLoaded(event, addonName)
     if addonName ~= ESOZH.name then
         return
     end
+
+    LIBMW = LibStub:GetLibrary("LibMsgWin-1.0")
+    ESOZH.zhWnd = LIBMW:CreateMsgWindow("eso_zh", "Chinese Translation")
 
     ESOZH.QUEST:Initialize()
 end
