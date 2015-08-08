@@ -14,6 +14,11 @@ local wnd_attr = {
     vmargin = 50,
 }
 
+local digit_attr = {
+    width = 2,
+    height = 2,
+}
+
 --** local functions **--
 
 local function getHash(str) -- BKDRHash
@@ -27,25 +32,28 @@ local function getHash(str) -- BKDRHash
     return hash
 end
 
-local function ShowTextQrcode(text)
-    local hash = getHash(text)
-    -- TODO
-end
-
-function ShowQrcode(tab)
+local function ShowQrcode(tab)
     -- hide all digits
     for i = 1, 2048 do
         textures[i]:SetHidden(true)
     end
     -- place white digits
-    --row = 0
-    --col = 0
+    local row = 0
+    local col = 0
     --for i = 1, #tab do
     --    textures[i]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-    --        wnd_attr.hmargin - char_attr.hmargin + col * (char_attr.width + char_attr.hmargin),
-    --        wnd_attr.vmargin - char_attr.vmargin + row * (char_attr.height + char_attr.vmargin))
+    --        wnd_attr.hmargin + col * digit_attr.width, wnd_attr.vmargin + row * digit_attr.height)
     --    textures[i]:SetHidden(false)
     --end
+    textures[1]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
+        wnd_attr.hmargin + col * digit_attr.width, wnd_attr.vmargin + row * digit_attr.height)
+    textures[1]:SetHidden(false)
+end
+
+local function ShowTextQrcode(text)
+    local hash = getHash(text)
+    -- TODO
+    ShowQrcode("text")
 end
 
 --** public functions **--
@@ -58,7 +66,7 @@ end
 function ESOZH.QUEST:Initialize()
     for i = 1, 2048 do
         textures[i] = WINDOW_MANAGER:CreateControl("texture"..tostring(i), ESOZH.zhWnd, CT_TEXTURE)
-        textures[i]:SetDimensions(1, 1)
+        textures[i]:SetDimensions(digit_attr.width, digit_attr.height)
         textures[i]:SetHidden(true)
         textures[i]:SetTexture('eso_zh/texture/white.dds')
     end
