@@ -24,4 +24,3 @@ lib/LibStub.lua
 lib/LibMsgWin-1.0.lua
 
 quest_text/quest.lua
-quest_text/translate.lua
