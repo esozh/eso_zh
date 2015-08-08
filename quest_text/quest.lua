@@ -25,11 +25,12 @@ local wnd_attr = {
 
 local function getHash(str) -- BKDRHash
     local seed = 131
-    local ash = 0
+    local hash = 0
     for i = 1, #str do
-        local ch = str:sub(i, i)
-        hash = hash * seed + ch
+        local ch = string.byte(str, i)
+        hash = hash * seed + tonumber(ch)
         hash = hash % 0x80000000
+    end
     return hash
 end
 
@@ -37,13 +38,18 @@ end
 
 ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
     Origin_InteractWindow_SetText(self, bodyText)
-    ESOZH.QUEST:ShowText({19985, 20040})
     ESOZH.QUEST:TranslateAndShowText(bodyText)
 end
 
 function ESOZH.QUEST:TranslateAndShowText(text)
     local hash = getHash(text)
     local ids = ESOZH.QUEST.hashTbl[tonumber(hash)]
+    d(hash)
+    thehash = hash
+    d(ids)
+    if ids == nil then
+        return
+    end
     if #ids > 1 then
         for id in ids do
             if text == ESOZH.QUEST.enTbl[id] then
@@ -75,6 +81,7 @@ function ESOZH.QUEST:ShowText(textTbl)
     charsInARow = (wnd_attr.width - 2 * wnd_attr.hmargin + char_attr.hmargin) / (char_attr.width + char_attr.hmargin)
     row = 0
     col = 0
+    d(textTbl)
     for i = 1, #textTbl do
         d(tostring(textTbl[i]))
         textures[i]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
