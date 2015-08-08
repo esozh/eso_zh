@@ -11,6 +11,7 @@ function ESOZH.OnAddOnLoaded(event, addonName)
         return
     end
 
+    qrencode = LibStub:GetLibrary("qrencode")
     LIBMW = LibStub:GetLibrary("LibMsgWin-1.0")
     ESOZH.zhWnd = LIBMW:CreateMsgWindow("eso_zh", "Chinese Translation")
 

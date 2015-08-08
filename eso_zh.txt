@@ -22,5 +22,6 @@ eso_zh.lua
 
 lib/LibStub.lua
 lib/LibMsgWin-1.0.lua
+lib/qrencode.lua
 
 quest_text/quest.lua

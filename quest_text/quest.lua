@@ -52,8 +52,8 @@ end
 
 local function ShowTextQrcode(text)
     local hash = getHash(text)
-    -- TODO
-    ShowQrcode("text")
+    tab = qrencode.qrcode(text)
+    ShowQrcode(tab)
 end
 
 --** public functions **--
