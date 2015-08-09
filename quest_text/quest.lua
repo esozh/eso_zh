@@ -4,19 +4,18 @@
 ESOZH.QUEST = {}
 
 local Origin_InteractWindow_SetText= ZO_InteractWindowTargetAreaBodyText.SetText
+local Origin_InteractionManager_OnEndInteraction = ZO_InteractionManager.OnEndInteraction
 
 local textures = {}
 
 local wnd_attr = {
-    width = 250,
-    height = 300,
     hmargin = 15,
-    vmargin = 50,
+    top = 50,
+    bottom = 15,
 }
 
 local digit_attr = {
     width = 4,
-    height = 4,
     number = 8192,
 }
 
@@ -26,44 +25,49 @@ local function ShowQrcode(tab)
     -- hide all digits
     ESOZH.QUEST:HideQrcode()
 
+    local num_col = #tab
+
     -- place white digits
     local index = 0
-    for col = 1, #tab do
+    for col = 1, num_col do
         local colArray = tab[col]
         for row = 1, #colArray do
             if colArray[row] < 0 then
                 index = index + 1
                 textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-                        wnd_attr.hmargin + col * digit_attr.width, wnd_attr.vmargin + row * digit_attr.height)
+                        wnd_attr.hmargin + col * digit_attr.width, wnd_attr.top + row * digit_attr.width)
                 textures[index]:SetHidden(false)
             end
         end
     end
 
     -- place background
-    local num_col = #tab
     for i = 0, num_col do
         -- top
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin + i * digit_attr.width, wnd_attr.vmargin)
+            wnd_attr.hmargin + i * digit_attr.width, wnd_attr.top)
         textures[index]:SetHidden(false)
         -- right
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin + (num_col + 1) * digit_attr.width, wnd_attr.vmargin + i * digit_attr.height)
+            wnd_attr.hmargin + (num_col + 1) * digit_attr.width, wnd_attr.top + i * digit_attr.width)
         textures[index]:SetHidden(false)
         -- bottom
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin + (i + 1) * digit_attr.width, wnd_attr.vmargin + (num_col + 1) * digit_attr.height)
+            wnd_attr.hmargin + (i + 1) * digit_attr.width, wnd_attr.top + (num_col + 1) * digit_attr.width)
         textures[index]:SetHidden(false)
         -- left
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin, wnd_attr.vmargin + (i + 1) * digit_attr.height)
+            wnd_attr.hmargin, wnd_attr.top + (i + 1) * digit_attr.width)
         textures[index]:SetHidden(false)
     end
+
+    -- resize window
+    local qr_width = (num_col + 2) * digit_attr.width
+    ESOZH.zhWnd:SetDimensions(qr_width + wnd_attr.hmargin * 2, qr_width + wnd_attr.top + wnd_attr.bottom)
 end
 
 --** public functions **--
@@ -81,16 +85,22 @@ function ESOZH.QUEST:ShowTextQrcode(text)
     end
 end
 
-ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
-    Origin_InteractWindow_SetText(self, bodyText)
-    ESOZH.QUEST:ShowTextQrcode(bodyText)
-end
-
 function ESOZH.QUEST:Initialize()
     for i = 1, digit_attr.number do
         textures[i] = WINDOW_MANAGER:CreateControl("texture"..tostring(i), ESOZH.zhWnd, CT_TEXTURE)
-        textures[i]:SetDimensions(digit_attr.width, digit_attr.height)
+        textures[i]:SetDimensions(digit_attr.width, digit_attr.width)
         textures[i]:SetHidden(true)
         textures[i]:SetTexture('eso_zh/texture/white.dds')
     end
+end
+
+ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
+    Origin_InteractWindow_SetText(self, bodyText)
+    ESOZH.QUEST:ShowTextQrcode(bodyText)
+    ESOZH.zhWnd:SetHidden(false)
+end
+
+ZO_InteractionManager.OnEndInteraction = function (self, interaction)
+    Origin_InteractionManager_OnEndInteraction(self, interaction)
+    ESOZH.zhWnd:SetHidden(true)
 end
