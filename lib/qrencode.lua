@@ -238,7 +238,7 @@ local function get_version_eclevel(len,mode,requested_ec_level)
 	local maxec_level = 1
 	for ec_level=1,4 do
 		if requested_ec_level == nil or ec_level >= requested_ec_level then
-			for version=1,#capacity do
+			for version=1,#capacity,2 do
 				bits = capacity[version][ec_level] * 8
 				bits = bits - 4 -- the mode indicator
 				if version < 10 then
@@ -1343,10 +1343,5 @@ if testing then
 	}
 end
 
---return {
---	qrcode = qrcode
---}
-
--- following code edited by bssthu
 local qrencode = LibStub:NewLibrary("qrencode", 1)
 qrencode.qrcode = qrcode

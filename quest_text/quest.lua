@@ -24,15 +24,7 @@ local digit_attr = {
 
 local function ShowQrcode(tab)
     -- hide all digits
-    for i = 1, digit_attr.number do
-        textures[i]:SetHidden(true)
-    end
-
-    -- check
-    if #tab > digit_attr.number then
-        d("|ceee6666so_zh: text too long|r")
-        return
-    end
+    ESOZH.QUEST:HideQrcode()
 
     -- place white digits
     local index = 0
@@ -74,18 +66,24 @@ local function ShowQrcode(tab)
     end
 end
 
-local function ShowTextQrcode(text)
-    local ok, tab = qrencode.qrcode(text)
+--** public functions **--
+
+function ESOZH.QUEST:HideQrcode()
+    for i = 1, digit_attr.number do
+        textures[i]:SetHidden(true)
+    end
+end
+
+function ESOZH.QUEST:ShowTextQrcode(text)
+    local ok, tab = qrencode.qrcode(text, 4)
     if ok then
         ShowQrcode(tab)
     end
 end
 
---** public functions **--
-
 ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
     Origin_InteractWindow_SetText(self, bodyText)
-    ShowTextQrcode(bodyText)
+    ESOZH.QUEST:ShowTextQrcode(bodyText)
 end
 
 function ESOZH.QUEST:Initialize()
