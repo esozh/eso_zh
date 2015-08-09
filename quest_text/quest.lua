@@ -15,8 +15,8 @@ local wnd_attr = {
 }
 
 local digit_attr = {
-    width = 8,
-    height = 8,
+    width = 4,
+    height = 4,
     number = 8192,
 }
 
