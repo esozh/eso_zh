@@ -15,8 +15,8 @@ local wnd_attr = {
 }
 
 local digit_attr = {
-    width = 4,
-    height = 4,
+    width = 8,
+    height = 8,
     number = 8192,
 }
 
@@ -35,18 +35,42 @@ local function ShowQrcode(tab)
     end
 
     -- place white digits
-    local row = 0
     local index = 0
-    for row = 1, #tab do
-        local rowArray = tab[row]
-        for col = 1, #rowArray do
-            if rowArray[col] > 0 then
+    for col = 1, #tab do
+        local colArray = tab[col]
+        for row = 1, #colArray do
+            if colArray[row] < 0 then
                 index = index + 1
                 textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
                         wnd_attr.hmargin + col * digit_attr.width, wnd_attr.vmargin + row * digit_attr.height)
                 textures[index]:SetHidden(false)
             end
         end
+    end
+
+    -- place background
+    local num_col = #tab
+    for i = 0, num_col do
+        -- top
+        index = index + 1
+        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
+            wnd_attr.hmargin + i * digit_attr.width, wnd_attr.vmargin)
+        textures[index]:SetHidden(false)
+        -- right
+        index = index + 1
+        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
+            wnd_attr.hmargin + (num_col + 1) * digit_attr.width, wnd_attr.vmargin + i * digit_attr.height)
+        textures[index]:SetHidden(false)
+        -- bottom
+        index = index + 1
+        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
+            wnd_attr.hmargin + (i + 1) * digit_attr.width, wnd_attr.vmargin + (num_col + 1) * digit_attr.height)
+        textures[index]:SetHidden(false)
+        -- left
+        index = index + 1
+        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
+            wnd_attr.hmargin, wnd_attr.vmargin + (i + 1) * digit_attr.height)
+        textures[index]:SetHidden(false)
     end
 end
 
