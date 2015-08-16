@@ -266,6 +266,9 @@ local function get_version_eclevel(len,mode,requested_ec_level)
 					break
 				end
 			end
+			if c < len then -- fail
+				minversion = -1
+			end
 		end
 	end
 	return minversion, maxec_level
@@ -1307,6 +1310,9 @@ end
 local function qrcode( str, ec_level, mode )
 	local arranged_data, version, ec_level, data_raw, mode, len_bitstring
 	version, ec_level, data_raw, mode, len_bitstring = get_version_eclevel_mode_bistringlength(str)
+	if version < 0 then
+		return false, "Too much data."
+	end
 	data_raw = data_raw .. len_bitstring
 	data_raw = data_raw .. encode_data(str,mode)
 	data_raw = add_pad_data(version,ec_level,data_raw)

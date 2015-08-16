@@ -24,4 +24,5 @@ lib/LibStub.lua
 lib/LibMsgWin-1.0.lua
 lib/qrencode.lua
 
-quest_text/quest.lua
+gen_qr/qr.lua
+gen_qr/get_text.lua

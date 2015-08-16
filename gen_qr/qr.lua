@@ -1,10 +1,7 @@
 -- -*- coding: utf-8 -*-
 -- created by bssthu
 
-ESOZH.QUEST = {}
-
-local Origin_InteractWindow_SetText= ZO_InteractWindowTargetAreaBodyText.SetText
-local Origin_InteractionManager_OnEndInteraction = ZO_InteractionManager.OnEndInteraction
+ESOZH.QR = {}
 
 local textures = {}
 
@@ -23,7 +20,7 @@ local digit_attr = {
 
 local function ShowQrcode(tab)
     -- hide all digits
-    ESOZH.QUEST:HideQrcode()
+    ESOZH.QR:HideQrcode()
 
     local num_col = #tab
 
@@ -72,35 +69,24 @@ end
 
 --** public functions **--
 
-function ESOZH.QUEST:HideQrcode()
+function ESOZH.QR:HideQrcode()
     for i = 1, digit_attr.number do
         textures[i]:SetHidden(true)
     end
 end
 
-function ESOZH.QUEST:ShowTextQrcode(text)
-    local ok, tab = qrencode.qrcode(text, 4)
+function ESOZH.QR:ShowTextQrcode(text)
+    local ok, tab = qrencode.qrcode(text)
     if ok then
         ShowQrcode(tab)
     end
 end
 
-function ESOZH.QUEST:Initialize()
+function ESOZH.QR:Initialize()
     for i = 1, digit_attr.number do
         textures[i] = WINDOW_MANAGER:CreateControl("texture"..tostring(i), ESOZH.zhWnd, CT_TEXTURE)
         textures[i]:SetDimensions(digit_attr.width, digit_attr.width)
         textures[i]:SetHidden(true)
         textures[i]:SetTexture('eso_zh/texture/white.dds')
     end
-end
-
-ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
-    Origin_InteractWindow_SetText(self, bodyText)
-    ESOZH.QUEST:ShowTextQrcode(bodyText)
-    ESOZH.zhWnd:SetHidden(false)
-end
-
-ZO_InteractionManager.OnEndInteraction = function (self, interaction)
-    Origin_InteractionManager_OnEndInteraction(self, interaction)
-    ESOZH.zhWnd:SetHidden(true)
 end

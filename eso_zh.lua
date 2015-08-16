@@ -5,6 +5,11 @@ ESOZH = {}
 
 ESOZH.name = "eso_zh"
 
+local firstLoad = true
+
+
+local Origin_InteractWindow_SetText= ZO_InteractWindowTargetAreaBodyText.SetText
+local Origin_InteractionManager_OnEndInteraction = ZO_InteractionManager.OnEndInteraction
 
 function ESOZH.OnAddOnLoaded(event, addonName)
     if addonName ~= ESOZH.name then
@@ -16,14 +21,39 @@ function ESOZH.OnAddOnLoaded(event, addonName)
     ESOZH.zhWnd = LIBMW:CreateMsgWindow("eso_zh", "Chinese Translation")
     ESOZH.zhWnd:SetHidden(true)
 
-    ESOZH.QUEST:Initialize()
+    ESOZH.QR:Initialize()
 
     -- other events
     EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_PLAYER_ACTIVATED, ESOZH.LoadScreen)
+    EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_SHOW_BOOK, ESOZH.OnShowBook)
 end
 
 function ESOZH.LoadScreen(event)
-    d("|ceeeeeeESOZH by bssthu|r")
+    if firstLoad then
+        d("|ceeeeeeESOZH by bssthu|r")
+        firstLoad = false
+    end
+end
+
+-- when talk with npc
+ZO_InteractWindowTargetAreaBodyText.SetText = function (self, bodyText)
+    Origin_InteractWindow_SetText(self, bodyText)
+    ESOZH.QR:ShowTextQrcode(bodyText)
+    ESOZH.zhWnd:SetHidden(false)
+end
+
+ZO_InteractionManager.OnEndInteraction = function (self, interaction)
+    Origin_InteractionManager_OnEndInteraction(self, interaction)
+    ESOZH.zhWnd:SetHidden(true)
+end
+
+-- when read books
+function ESOZH.OnShowBook(eventCode, title, body, medium, showTitle)
+    text = body
+    if showTitle then
+        text = title..'\n\n'..text
+    end
+    ESOZH.QR:ShowTextQrcode(text)
 end
 
 
