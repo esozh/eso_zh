@@ -1,0 +1,25 @@
+<GuiXml>
+    <Controls>
+        <TopLevelControl name="ButtonPrev">
+            <Controls>
+                <Label name="$(parent)InnerLabel" text="<< Prev" font="ZoFontGame" mouseEnabled="true">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                    <OnMouseDown>
+                        ESOZH.QR.OnClickPrev()
+                    </OnMouseDown>
+                </Label>
+            </Controls>
+        </TopLevelControl>
+
+        <TopLevelControl name="ButtonNext">
+            <Controls>
+                <Label name="$(parent)InnerLabel" text="Next >>" font="ZoFontGame" mouseEnabled="true">
+                    <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" />
+                    <OnMouseDown>
+                        ESOZH.QR.OnClickNext()
+                    </OnMouseDown>
+                </Label>
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>

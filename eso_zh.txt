@@ -19,6 +19,7 @@
 ; https://account.elderscrollsonline.com/add-on-terms
 
 eso_zh.lua
+eso_zh.xml
 
 lib/LibStub.lua
 lib/LibMsgWin-1.0.lua

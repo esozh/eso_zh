@@ -65,6 +65,10 @@ local function ShowQrcode(tab)
     -- resize window
     local qr_width = (num_col + 2) * digit_attr.width
     ESOZH.zhWnd:SetDimensions(qr_width + wnd_attr.hmargin * 2, qr_width + wnd_attr.top + wnd_attr.bottom)
+
+    -- show buttons
+    ButtonPrev:SetHidden(false)
+    ButtonNext:SetHidden(false)
 end
 
 --** public functions **--
@@ -73,20 +77,36 @@ function ESOZH.QR:HideQrcode()
     for i = 1, digit_attr.number do
         textures[i]:SetHidden(true)
     end
+    ButtonPrev:SetHidden(true)
+    ButtonNext:SetHidden(true)
 end
 
 function ESOZH.QR:ShowTextQrcode(text)
-    local ok, tab = qrencode.qrcode(text)
+    local ok, tab = qrencode.qrcode(text, 3)
     if ok then
         ShowQrcode(tab)
     end
 end
 
 function ESOZH.QR:Initialize()
+    -- texture
     for i = 1, digit_attr.number do
         textures[i] = WINDOW_MANAGER:CreateControl("texture"..tostring(i), ESOZH.zhWnd, CT_TEXTURE)
         textures[i]:SetDimensions(digit_attr.width, digit_attr.width)
         textures[i]:SetHidden(true)
         textures[i]:SetTexture('eso_zh/texture/white.dds')
     end
+    -- button
+    ButtonPrev:SetAnchor(TOPLEFT, ESOZH.zhWnd, BOTTOMLEFT, 15)
+    ButtonNext:SetAnchor(TOPRIGHT, ESOZH.zhWnd, BOTTOMRIGHT, -15)
+    ButtonPrev:SetHidden(true)
+    ButtonNext:SetHidden(true)
+end
+
+function ESOZH.QR:OnClickNext()
+    d('next')
+end
+
+function ESOZH.QR:OnClickPrev()
+    d('previ')
 end
