@@ -26,6 +26,7 @@ function ESOZH.OnAddOnLoaded(event, addonName)
     -- other events
     EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_PLAYER_ACTIVATED, ESOZH.LoadScreen)
     EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_SHOW_BOOK, ESOZH.OnShowBook)
+    EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_HIDE_BOOK, ESOZH.OnHideBook)
 end
 
 function ESOZH.LoadScreen(event)
@@ -44,6 +45,8 @@ end
 
 ZO_InteractionManager.OnEndInteraction = function (self, interaction)
     Origin_InteractionManager_OnEndInteraction(self, interaction)
+    ButtonPrev:SetHidden(true)
+    ButtonNext:SetHidden(true)
     ESOZH.zhWnd:SetHidden(true)
 end
 
@@ -54,6 +57,13 @@ function ESOZH.OnShowBook(eventCode, title, body, medium, showTitle)
         text = title..'\n\n'..text
     end
     ESOZH.QR:ShowTextQrcode(text)
+    ESOZH.zhWnd:SetHidden(false)
+end
+
+function ESOZH.OnHideBook(eventCode)
+    ButtonPrev:SetHidden(true)
+    ButtonNext:SetHidden(true)
+    ESOZH.zhWnd:SetHidden(true)
 end
 
 

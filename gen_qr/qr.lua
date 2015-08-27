@@ -77,14 +77,14 @@ function ESOZH.QR:HideQrcode()
     for i = 1, digit_attr.number do
         textures[i]:SetHidden(true)
     end
-    ButtonPrev:SetHidden(true)
-    ButtonNext:SetHidden(true)
 end
 
 function ESOZH.QR:ShowTextQrcode(text)
     local ok, tab = qrencode.qrcode(text, 3)
     if ok then
         ShowQrcode(tab)
+        d('ok')
+        d(#tab)
     end
 end
 
