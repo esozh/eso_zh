@@ -5,15 +5,20 @@ ESOZH.QR = {}
 
 local textures = {}
 
-local wnd_attr = {
+local WND_ATTR = {
     hmargin = 15,
     top = 50,
     bottom = 15,
 }
 
-local digit_attr = {
+local DIGIT_ATTR = {
     width = 4,
     number = 8192,
+}
+
+local QR_ATTR = {
+    ec_level = 4,
+    max_str_len = 500,
 }
 
 --** local functions **--
@@ -32,7 +37,7 @@ local function ShowQrcode(tab)
             if colArray[row] < 0 then
                 index = index + 1
                 textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-                        wnd_attr.hmargin + col * digit_attr.width, wnd_attr.top + row * digit_attr.width)
+                        WND_ATTR.hmargin + col * DIGIT_ATTR.width, WND_ATTR.top + row * DIGIT_ATTR.width)
                 textures[index]:SetHidden(false)
             end
         end
@@ -43,56 +48,64 @@ local function ShowQrcode(tab)
         -- top
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin + i * digit_attr.width, wnd_attr.top)
+            WND_ATTR.hmargin + i * DIGIT_ATTR.width, WND_ATTR.top)
         textures[index]:SetHidden(false)
         -- right
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin + (num_col + 1) * digit_attr.width, wnd_attr.top + i * digit_attr.width)
+            WND_ATTR.hmargin + (num_col + 1) * DIGIT_ATTR.width, WND_ATTR.top + i * DIGIT_ATTR.width)
         textures[index]:SetHidden(false)
         -- bottom
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin + (i + 1) * digit_attr.width, wnd_attr.top + (num_col + 1) * digit_attr.width)
+            WND_ATTR.hmargin + (i + 1) * DIGIT_ATTR.width, WND_ATTR.top + (num_col + 1) * DIGIT_ATTR.width)
         textures[index]:SetHidden(false)
         -- left
         index = index + 1
         textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            wnd_attr.hmargin, wnd_attr.top + (i + 1) * digit_attr.width)
+            WND_ATTR.hmargin, WND_ATTR.top + (i + 1) * DIGIT_ATTR.width)
         textures[index]:SetHidden(false)
     end
 
     -- resize window
-    local qr_width = (num_col + 2) * digit_attr.width
-    ESOZH.zhWnd:SetDimensions(qr_width + wnd_attr.hmargin * 2, qr_width + wnd_attr.top + wnd_attr.bottom)
+    local qr_width = (num_col + 2) * DIGIT_ATTR.width
+    ESOZH.zhWnd:SetDimensions(qr_width + WND_ATTR.hmargin * 2, qr_width + WND_ATTR.top + WND_ATTR.bottom)
 
     -- show buttons
     ButtonPrev:SetHidden(false)
     ButtonNext:SetHidden(false)
 end
 
+local function ShowShortTextQrcode(text)
+    local ok, tab = qrencode.qrcode(text, QR_ATTR.ec_level)
+    if ok then
+        ShowQrcode(tab)
+    end
+end
+
 --** public functions **--
 
 function ESOZH.QR:HideQrcode()
-    for i = 1, digit_attr.number do
+    for i = 1, DIGIT_ATTR.number do
         textures[i]:SetHidden(true)
     end
 end
 
 function ESOZH.QR:ShowTextQrcode(text)
-    local ok, tab = qrencode.qrcode(text, 3)
-    if ok then
-        ShowQrcode(tab)
-        d('ok')
-        d(#tab)
+    if (#text <= QR_ATTR.max_str_len) then
+        ShowShortTextQrcode(text)
+    else
+        local sentences = split(text, '\n\n')
+        for key, sentence in pairs(sentences) do
+        end
     end
 end
 
 function ESOZH.QR:Initialize()
     -- texture
-    for i = 1, digit_attr.number do
+    for i = 1, DIGIT_ATTR.number do
         textures[i] = WINDOW_MANAGER:CreateControl("texture"..tostring(i), ESOZH.zhWnd, CT_TEXTURE)
-        textures[i]:SetDimensions(digit_attr.width, digit_attr.width)
+        textures[i]:SetDimensions(DIGIT_ATTR.width, DIGIT_ATTR.width)
         textures[i]:SetHidden(true)
         textures[i]:SetTexture('eso_zh/texture/white.dds')
     end

@@ -21,6 +21,7 @@
 eso_zh.lua
 eso_zh.xml
 
+lib/util.lua
 lib/LibStub.lua
 lib/LibMsgWin-1.0.lua
 lib/qrencode.lua
