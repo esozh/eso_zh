@@ -21,6 +21,9 @@ local QR_ATTR = {
     max_str_len = 500,
 }
 
+local paragraphs = {}
+local paragraphIndex = 0
+
 --** local functions **--
 
 local function ShowQrcode(tab)
@@ -76,11 +79,21 @@ local function ShowQrcode(tab)
     ButtonNext:SetHidden(false)
 end
 
-local function ShowShortTextQrcode(text)
-    local ok, tab = qrencode.qrcode(text, QR_ATTR.ec_level)
-    if ok then
-        ShowQrcode(tab)
+-- show qr code of text in table paragraphs
+local function ShowShortTextQrcode()
+    local text = paragraphs[paragraphIndex]
+    if text ~= nil then
+        local ok, tab = qrencode.qrcode(text, QR_ATTR.ec_level)
+        if ok then
+            ShowQrcode(tab)
+        end
     end
+end
+
+-- show or hide buttons (next and prev)
+local function UpdateButtons()
+    ButtonPrev:SetHidden(paragraphIndex <= 0)
+    ButtonNext:SetHidden(paragraphIndex >= #paragraphs)
 end
 
 --** public functions **--
@@ -93,12 +106,30 @@ end
 
 function ESOZH.QR:ShowTextQrcode(text)
     if (#text <= QR_ATTR.max_str_len) then
-        ShowShortTextQrcode(text)
+        paragraphs = { [0] = text }
     else
+        paragraphs = {}
         local sentences = split(text, '\n\n')
+        local paragraph = ''
         for key, sentence in pairs(sentences) do
+            if #(paragraph..'\n\n'..sentence) <= QR_ATTR.max_str_len then
+                paragraph = paragraph..'\n\n'..sentence
+            elseif paragraph == '' then
+                table.insert(paragraphs, paragraphIndex, '\n\nsentence too long!')
+                break
+            else
+                table.insert(paragraphs, paragraphIndex, paragraph)
+                paragraphIndex = paragraphIndex + 1
+                paragraph = sentence
+            end
+        end
+        if paragraph ~= '' then -- last piece
+            table.insert(paragraphs, paragraphIndex, paragraph)
         end
     end
+    paragraphIndex = 0
+    ShowShortTextQrcode()
+    UpdateButtons()
 end
 
 function ESOZH.QR:Initialize()
@@ -116,10 +147,18 @@ function ESOZH.QR:Initialize()
     ButtonNext:SetHidden(true)
 end
 
-function ESOZH.QR:OnClickNext()
-    d('next')
+function ESOZH.QR:OnClickNextButton()
+    if paragraphIndex < #paragraphs then
+        paragraphIndex = paragraphIndex + 1
+        ShowShortTextQrcode()
+        UpdateButtons()
+    end
 end
 
-function ESOZH.QR:OnClickPrev()
-    d('previ')
+function ESOZH.QR:OnClickPrevButton()
+    if paragraphIndex > 0 then
+        paragraphIndex = paragraphIndex - 1
+        ShowShortTextQrcode()
+        UpdateButtons()
+    end
 end

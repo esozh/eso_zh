@@ -5,7 +5,7 @@
                 <Label name="$(parent)InnerLabel" text="<< Prev" font="ZoFontGame" mouseEnabled="true">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
                     <OnMouseDown>
-                        ESOZH.QR.OnClickPrev()
+                        ESOZH.QR.OnClickPrevButton()
                     </OnMouseDown>
                 </Label>
             </Controls>
@@ -16,7 +16,7 @@
                 <Label name="$(parent)InnerLabel" text="Next >>" font="ZoFontGame" mouseEnabled="true">
                     <Anchor point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" />
                     <OnMouseDown>
-                        ESOZH.QR.OnClickNext()
+                        ESOZH.QR.OnClickNextButton()
                     </OnMouseDown>
                 </Label>
             </Controls>
