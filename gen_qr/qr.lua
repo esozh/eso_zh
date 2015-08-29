@@ -27,9 +27,6 @@ local paragraphIndex = 0
 --** local functions **--
 
 local function ShowQrcode(tab)
-    -- hide all digits
-    ESOZH.QR:HideQrcode()
-
     local num_col = #tab
 
     -- place white digits
@@ -81,6 +78,9 @@ end
 
 -- show qr code of text in table paragraphs
 local function ShowShortTextQrcode()
+    -- hide all digits
+    ESOZH.QR:HideQrcode()
+
     local text = paragraphs[paragraphIndex]
     if text ~= nil then
         local ok, tab = qrencode.qrcode(text, QR_ATTR.ec_level)
@@ -115,10 +115,10 @@ function ESOZH.QR:ShowTextQrcode(text)
             if #(paragraph..'\n\n'..sentence) <= QR_ATTR.max_str_len then
                 paragraph = paragraph..'\n\n'..sentence
             elseif paragraph == '' then
-                table.insert(paragraphs, paragraphIndex, '\n\nsentence too long!')
+                paragraphs[paragraphIndex] = '\n\nsentence too long!'
                 break
             else
-                table.insert(paragraphs, paragraphIndex, paragraph)
+                paragraphs[paragraphIndex] = paragraph
                 paragraphIndex = paragraphIndex + 1
                 paragraph = sentence
             end
