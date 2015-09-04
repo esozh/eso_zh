@@ -12,7 +12,7 @@ local WND_ATTR = {
 }
 
 local DIGIT_ATTR = {
-    width = 4,
+    width = 6,
     number = 8192,
 }
 
@@ -72,8 +72,8 @@ local function ShowQrcode(tab)
     ESOZH.zhWnd:SetDimensions(qr_width + WND_ATTR.hmargin * 2, qr_width + WND_ATTR.top + WND_ATTR.bottom)
 
     -- show buttons
-    ButtonPrev:SetHidden(false)
-    ButtonNext:SetHidden(false)
+    ESOZH.buttonPrev:SetHidden(false)
+    ESOZH.buttonNext:SetHidden(false)
 end
 
 -- show qr code of text in table paragraphs
@@ -92,8 +92,8 @@ end
 
 -- show or hide buttons (next and prev)
 local function UpdateButtons()
-    ButtonPrev:SetHidden(paragraphIndex <= 0)
-    ButtonNext:SetHidden(paragraphIndex >= #paragraphs)
+    ESOZH.buttonPrev:SetHidden(paragraphIndex <= 0)
+    ESOZH.buttonNext:SetHidden(paragraphIndex >= #paragraphs)
 end
 
 --** public functions **--
@@ -141,10 +141,10 @@ function ESOZH.QR:Initialize()
         textures[i]:SetTexture('eso_zh/texture/white.dds')
     end
     -- button
-    ButtonPrev:SetAnchor(TOPLEFT, ESOZH.zhWnd, BOTTOMLEFT, 15)
-    ButtonNext:SetAnchor(TOPRIGHT, ESOZH.zhWnd, BOTTOMRIGHT, -15)
-    ButtonPrev:SetHidden(true)
-    ButtonNext:SetHidden(true)
+    ESOZH.buttonPrev:SetAnchor(TOPLEFT, ESOZH.zhWnd, BOTTOMLEFT, 15)
+    ESOZH.buttonNext:SetAnchor(TOPRIGHT, ESOZH.zhWnd, BOTTOMRIGHT, -15)
+    ESOZH.buttonPrev:SetHidden(true)
+    ESOZH.buttonNext:SetHidden(true)
 end
 
 function ESOZH.QR:OnClickNextButton()

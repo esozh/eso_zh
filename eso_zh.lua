@@ -20,8 +20,14 @@ function ESOZH.OnAddOnLoaded(event, addonName)
     LIBMW = LibStub:GetLibrary("LibMsgWin-1.0")
     ESOZH.zhWnd = LIBMW:CreateMsgWindow("eso_zh", "Chinese Translation")
     ESOZH.zhWnd:SetHidden(true)
+    ESOZH.buttonPrev = ButtonPrev
+    ESOZH.buttonNext = ButtonNext
 
     ESOZH.QR:Initialize()
+
+    -- close button
+    ESOZH.close = WINDOW_MANAGER:CreateControlFromVirtual(nil, ESOZH.zhWnd, "ZO_CloseButton")
+    ESOZH.close:SetHandler("OnClicked", function(...) ESOZH:HideUi() end)
 
     -- other events
     EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_PLAYER_ACTIVATED, ESOZH.LoadScreen)
@@ -45,9 +51,7 @@ end
 
 ZO_InteractionManager.OnEndInteraction = function (self, interaction)
     Origin_InteractionManager_OnEndInteraction(self, interaction)
-    ButtonPrev:SetHidden(true)
-    ButtonNext:SetHidden(true)
-    ESOZH.zhWnd:SetHidden(true)
+    ESOZH:HideUi()
 end
 
 -- when read books
@@ -61,8 +65,12 @@ function ESOZH.OnShowBook(eventCode, title, body, medium, showTitle)
 end
 
 function ESOZH.OnHideBook(eventCode)
-    ButtonPrev:SetHidden(true)
-    ButtonNext:SetHidden(true)
+    ESOZH:HideUi()
+end
+
+function ESOZH:HideUi()
+    ESOZH.buttonPrev:SetHidden(true)
+    ESOZH.buttonNext:SetHidden(true)
     ESOZH.zhWnd:SetHidden(true)
 end
 
