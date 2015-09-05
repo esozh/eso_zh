@@ -73,6 +73,10 @@ local function ShowShortTextQrcode()
     ESOZH.QR:HideQrcode()
 
     local text = TEXT_DATA.paragraphs[TEXT_DATA.paragraphIndex]
+    if text == nil then
+        return
+    end
+
     if TEXT_DATA.title ~= nil then
         text = '<title>'..TEXT_DATA.title..'</title>'..'\n\n'..text
     end
@@ -104,6 +108,7 @@ function ESOZH.QR:ShowTextQrcode(text, title)
         TEXT_DATA.paragraphs = { [0] = text }
     else
         TEXT_DATA.paragraphs = {}
+        TEXT_DATA.paragraphIndex = 0
         local sentences = split(text, '\n\n')
         local paragraph = ''
         for key, sentence in pairs(sentences) do
