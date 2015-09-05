@@ -11,6 +11,7 @@ local firstLoad = true
 local Origin_InteractWindow_SetText= ZO_InteractWindowTargetAreaBodyText.SetText
 local Origin_InteractionManager_OnEndInteraction = ZO_InteractionManager.OnEndInteraction
 local Origin_LoreReader_OnHide = ZO_LoreReader_OnHide
+local Origin_LoreLibrary_ReadBook = ZO_LoreLibrary_ReadBook
 
 function ESOZH.OnAddOnLoaded(event, addonName)
     if addonName ~= ESOZH.name then
@@ -65,6 +66,15 @@ ZO_LoreReader_OnHide = function (control)
     ESOZH:HideUi()
 end
 
+ZO_LoreLibrary_ReadBook = function (categoryIndex, collectionIndex, bookIndex)
+    Origin_LoreLibrary_ReadBook(categoryIndex, collectionIndex, bookIndex)
+    local title = GetLoreBookInfo(categoryIndex, collectionIndex, bookIndex)
+    local body, medium, showTitle = ReadLoreBook(categoryIndex, collectionIndex, bookIndex)
+    ESOZH.QR:ShowTextQrcode(body, title)
+    ESOZH.zhWnd:SetHidden(false)
+end
+
+-- other
 function ESOZH:HideUi()
     ESOZH.buttonPrev:SetHidden(true)
     ESOZH.buttonNext:SetHidden(true)
