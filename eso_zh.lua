@@ -10,6 +10,7 @@ local firstLoad = true
 
 local Origin_InteractWindow_SetText= ZO_InteractWindowTargetAreaBodyText.SetText
 local Origin_InteractionManager_OnEndInteraction = ZO_InteractionManager.OnEndInteraction
+local Origin_LoreReader_OnHide = ZO_LoreReader_OnHide
 
 function ESOZH.OnAddOnLoaded(event, addonName)
     if addonName ~= ESOZH.name then
@@ -32,7 +33,6 @@ function ESOZH.OnAddOnLoaded(event, addonName)
     -- other events
     EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_PLAYER_ACTIVATED, ESOZH.LoadScreen)
     EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_SHOW_BOOK, ESOZH.OnShowBook)
-    EVENT_MANAGER:RegisterForEvent(ESOZH.name, EVENT_HIDE_BOOK, ESOZH.OnHideBook)
 end
 
 function ESOZH.LoadScreen(event)
@@ -60,7 +60,8 @@ function ESOZH.OnShowBook(eventCode, title, body, medium, showTitle)
     ESOZH.zhWnd:SetHidden(false)
 end
 
-function ESOZH.OnHideBook(eventCode)
+ZO_LoreReader_OnHide = function (control)
+    Origin_LoreReader_OnHide(control)
     ESOZH:HideUi()
 end
 
