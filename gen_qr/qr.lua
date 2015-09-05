@@ -12,7 +12,7 @@ local WND_ATTR = {
 }
 
 local DIGIT_ATTR = {
-    width = 6,
+    width = 4,
     number = 8192,
 }
 
@@ -29,11 +29,23 @@ local paragraphIndex = 0
 local function ShowQrcode(tab)
     local num_col = #tab
 
+    -- set background
+    for col = 1, num_col do
+        tab[col][0] = -1
+        tab[col][num_col+1] = -1
+    end
+    tab[0] = {}
+    tab[num_col+1] = {}
+    for row = 0, num_col+1 do
+        tab[0][row] = -1
+        tab[num_col+1][row] = -1
+    end
+
     -- place white digits
     local index = 0
-    for col = 1, num_col do
+    for col = 0, num_col+1 do
         local colArray = tab[col]
-        for row = 1, #colArray do
+        for row = 0, #colArray do
             if colArray[row] < 0 then
                 index = index + 1
                 textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
@@ -41,30 +53,6 @@ local function ShowQrcode(tab)
                 textures[index]:SetHidden(false)
             end
         end
-    end
-
-    -- place background
-    for i = 0, num_col do
-        -- top
-        index = index + 1
-        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            WND_ATTR.hmargin + i * DIGIT_ATTR.width, WND_ATTR.top)
-        textures[index]:SetHidden(false)
-        -- right
-        index = index + 1
-        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            WND_ATTR.hmargin + (num_col + 1) * DIGIT_ATTR.width, WND_ATTR.top + i * DIGIT_ATTR.width)
-        textures[index]:SetHidden(false)
-        -- bottom
-        index = index + 1
-        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            WND_ATTR.hmargin + (i + 1) * DIGIT_ATTR.width, WND_ATTR.top + (num_col + 1) * DIGIT_ATTR.width)
-        textures[index]:SetHidden(false)
-        -- left
-        index = index + 1
-        textures[index]:SetAnchor(TOPLEFT, ESOZH.zhWnd, TOPLEFT,
-            WND_ATTR.hmargin, WND_ATTR.top + (i + 1) * DIGIT_ATTR.width)
-        textures[index]:SetHidden(false)
     end
 
     -- resize window
