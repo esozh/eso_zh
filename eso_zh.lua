@@ -56,11 +56,7 @@ end
 
 -- when read books
 function ESOZH.OnShowBook(eventCode, title, body, medium, showTitle)
-    text = body
-    if showTitle then
-        text = title..'\n\n'..text
-    end
-    ESOZH.QR:ShowTextQrcode(text)
+    ESOZH.QR:ShowTextQrcode(body, title)
     ESOZH.zhWnd:SetHidden(false)
 end
 

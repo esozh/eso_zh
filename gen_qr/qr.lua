@@ -21,8 +21,11 @@ local QR_ATTR = {
     max_str_len = 500,
 }
 
-local paragraphs = {}
-local paragraphIndex = 0
+local TEXT_DATA = {
+    title = '',
+    paragraphs = {},
+    paragraphIndex = 0,
+}
 
 --** local functions **--
 
@@ -69,7 +72,10 @@ local function ShowShortTextQrcode()
     -- hide all digits
     ESOZH.QR:HideQrcode()
 
-    local text = paragraphs[paragraphIndex]
+    local text = TEXT_DATA.paragraphs[TEXT_DATA.paragraphIndex]
+    if TEXT_DATA.title ~= nil then
+        text = '<title>'..TEXT_DATA.title..'</title>'..'\n\n'..text
+    end
     if text ~= nil then
         local ok, tab = qrencode.qrcode(text, QR_ATTR.ec_level)
         if ok then
@@ -80,8 +86,8 @@ end
 
 -- show or hide buttons (next and prev)
 local function UpdateButtons()
-    ESOZH.buttonPrev:SetHidden(paragraphIndex <= 0)
-    ESOZH.buttonNext:SetHidden(paragraphIndex >= #paragraphs)
+    ESOZH.buttonPrev:SetHidden(TEXT_DATA.paragraphIndex <= 0)
+    ESOZH.buttonNext:SetHidden(TEXT_DATA.paragraphIndex >= #TEXT_DATA.paragraphs)
 end
 
 --** public functions **--
@@ -92,30 +98,31 @@ function ESOZH.QR:HideQrcode()
     end
 end
 
-function ESOZH.QR:ShowTextQrcode(text)
+function ESOZH.QR:ShowTextQrcode(text, title)
+    TEXT_DATA.title = title
     if (#text <= QR_ATTR.max_str_len) then
-        paragraphs = { [0] = text }
+        TEXT_DATA.paragraphs = { [0] = text }
     else
-        paragraphs = {}
+        TEXT_DATA.paragraphs = {}
         local sentences = split(text, '\n\n')
         local paragraph = ''
         for key, sentence in pairs(sentences) do
             if #(paragraph..'\n\n'..sentence) <= QR_ATTR.max_str_len then
                 paragraph = paragraph..'\n\n'..sentence
             elseif paragraph == '' then
-                paragraphs[paragraphIndex] = '\n\nsentence too long!'
+                TEXT_DATA.paragraphs[TEXT_DATA.paragraphIndex] = '\n\nsentence too long!'
                 break
             else
-                paragraphs[paragraphIndex] = paragraph
-                paragraphIndex = paragraphIndex + 1
+                TEXT_DATA.paragraphs[TEXT_DATA.paragraphIndex] = paragraph
+                TEXT_DATA.paragraphIndex = TEXT_DATA.paragraphIndex + 1
                 paragraph = sentence
             end
         end
         if paragraph ~= '' then -- last piece
-            table.insert(paragraphs, paragraphIndex, paragraph)
+            TEXT_DATA.paragraphs[TEXT_DATA.paragraphIndex] = paragraph
         end
     end
-    paragraphIndex = 0
+    TEXT_DATA.paragraphIndex = 0
     ShowShortTextQrcode()
     UpdateButtons()
 end
@@ -136,16 +143,16 @@ function ESOZH.QR:Initialize()
 end
 
 function ESOZH.QR:OnClickNextButton()
-    if paragraphIndex < #paragraphs then
-        paragraphIndex = paragraphIndex + 1
+    if TEXT_DATA.paragraphIndex < #TEXT_DATA.paragraphs then
+        TEXT_DATA.paragraphIndex = TEXT_DATA.paragraphIndex + 1
         ShowShortTextQrcode()
         UpdateButtons()
     end
 end
 
 function ESOZH.QR:OnClickPrevButton()
-    if paragraphIndex > 0 then
-        paragraphIndex = paragraphIndex - 1
+    if TEXT_DATA.paragraphIndex > 0 then
+        TEXT_DATA.paragraphIndex = TEXT_DATA.paragraphIndex - 1
         ShowShortTextQrcode()
         UpdateButtons()
     end
