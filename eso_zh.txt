@@ -1,7 +1,7 @@
 ## Title: eso_zh
 ## Description: Chinese translation
 ## Version: 0.1
-## APIVersion: 100012
+## APIVersion: 100013
 
 ## SavedVariables: eso_zh_Variables
 
